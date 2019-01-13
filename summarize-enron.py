@@ -69,7 +69,7 @@ def plot_output_by_time(target_df, legend_lst, y_label, title, output_fname):
 
 # Data loading - START #
 
-try:  #read the csv data file on the required columns, create the columns headers and handle any exceptions
+try:  # Read the csv data file on the required columns, create the columns headers and handle any exceptions
     event_hist_df = pd.read_csv(input_filename, header=None, usecols=[0, 1, 2, 3], names=['DateTime', 'Msg_ID', 'Sent', 'Received'])
 except NameError:
     print("Filename Not Found.")
@@ -138,7 +138,7 @@ working_2_df.columns = ['Sender', 'Date', 'Count']
 
 output_2_df = working_2_df.pivot(index="Date", columns="Sender", values="Count").fillna(0).astype(int)  # Pivot for plotting by senders and time
 
-plot_output_by_time(output_2_df, prolific_senders_df['Sent'], 'No. of emails sent', 'No. of emails sent by most prolific senders', 'Output_2.png')  #Generate png file
+plot_output_by_time(output_2_df, prolific_senders_df['Sent'], 'No. of emails sent', 'No. of emails sent by most prolific senders', 'Output_2.png')  # Generate png file
 
 # Output 2 - END #
 
@@ -155,6 +155,6 @@ working_3_df.columns = ['Date', 'Recipient', 'Count']
 
 output_3_df = working_3_df.pivot(index="Date", columns="Recipient", values="Count").fillna(0).astype(int)  # Pivot for plotting by senders and time
 
-plot_output_by_time(output_3_df, prolific_senders_df['Sent'], 'No. of unique contact(s)', 'No. of unique person(s) who contacted the prolific senders', 'Output_3.png')  #Generate png file
+plot_output_by_time(output_3_df, prolific_senders_df['Sent'], 'No. of unique contact(s)', 'No. of unique person(s) who contacted the prolific senders', 'Output_3.png')  # Generate png file
 
 # Output 3 - END #
