@@ -1,0 +1,7 @@
+# Library dependencies for the python code.  You need to install these with
+# `pip install -r requirements.txt` or
+# `conda install --file requirements.txt` before you can run the code.
+# Please use Python 3.6 and above to execute
+
+pandas
+matplotlib
