@@ -18,4 +18,5 @@ Filename                          |  Description
 ----------------------------------|------------------------------------------------------------------------------------
 enron-event-history-all.csv       |  Enron event history (.csv, adapted from the widely-used publicly available data set)
 requirements.txt                  |  Requirements file on required python packages 
-summarize-enron.py                |  Enron Data Summarization python code
+summarize-enron.py                |  Enron Data Summarization python final code 
+working\summarize-enron.ipynb     |  Working and data exploration notebook
