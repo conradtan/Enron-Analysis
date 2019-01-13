@@ -18,8 +18,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 if len(sys.argv) <= 1:
-    print('\nsummarize-enron.py')
-    print('Command: python summarize-enron.py [name of csv data file]')
+    print('\nsummarize-enron.py - please provide valid argument')
+    print('\nCommand: python summarize-enron.py [name of csv data file]')
     print('Example: python summarize-enron.py enron-event-history-all.csv')
     exit(1)
 
@@ -31,21 +31,6 @@ input_filename = sys.argv[1]
 num_prolific_senders = 10
 
 
-# Function to create dataframe with list of senders, recipients and the email exchange datetime
-# Input parameters
-# 1. target_df: dataframe of recipients that has been splitted to the columns.
-# 2. with_date_df: input dataframe containing datetime
-# Output parameters
-# 1. working_df: list of senders, recipients and the email exchange datetime
-def sender_recipient_date_df(target_df, with_date_df):
-    
-    working_df = target_df.copy()  # Get a working copy
-    working_df['DateTime'] = with_date_df['DateTime']  # Add DateTime to Dataframe
-    working_df = pd.melt(working_df, id_vars=['DateTime', 'Sent'], value_name='Received')  # Unpivot recepients into 1 Received column
-    working_df.reset_index(inplace=True) 
-    working_df.index = working_df.set_index(['DateTime']).index.to_period('M').to_timestamp('M')  # Convert index to month-end dates
-    working_df.drop(['DateTime', 'variable'], axis=1, inplace=True) 
-    return working_df
 
 # Function to plot chart by time(by month)
 # Input parameters
@@ -126,10 +111,19 @@ output_1_df.to_csv('Output_1.csv', index=False)  # Generate Output 1 to csv file
 prolific_senders_df = pd.DataFrame()
 prolific_senders_df['Sent'] = output_1_df['person'].head(num_prolific_senders)  # Get most prolific senders
 
+# Create sender_recipient_date_df once with list of senders, recipients and the email exchange datetime for use in Outputs 2 and 3
+sender_recipient_date_df = split_received_df.copy()  # Get a working copy
+sender_recipient_date_df['DateTime'] = cleaned_df['DateTime']  # Add DateTime to Dataframe
+sender_recipient_date_df = pd.melt(working_df, id_vars=['DateTime', 'Sent'], value_name='Received')  # Unpivot recepients into 1 Received column
+sender_recipient_date_df.reset_index(inplace=True) 
+sender_recipient_date_df.index = working_df.set_index(['DateTime']).index.to_period('M').to_timestamp('M')  # Convert index to month-end dates
+sender_recipient_date_df.drop(['DateTime', 'variable'], axis=1, inplace=True) 
+
+
 
 # Output 2 - START #
 
-working_2_df = sender_recipient_date_df(split_received_df, cleaned_df)  # Execute function to get sender recipient and date dataframe
+working_2_df = sender_recipient_date_df.copy()  # Get working copy
 working_2_df = working_2_df.loc[working_2_df['Sent'].isin(prolific_senders_df['Sent'])]  # Check the Sender column and filter off non-prolific senders
 working_2_df = working_2_df.groupby(working_2_df['Sent'], as_index=True).resample('M').count()  # Resample to plot by month
 working_2_df.drop(['Sent', 'index'], axis=1, inplace=True) 
@@ -142,10 +136,10 @@ plot_output_by_time(output_2_df, prolific_senders_df['Sent'], 'No. of emails sen
 
 # Output 2 - END #
 
+
 # Output 3 - START #
 
-working_3_df = sender_recipient_date_df(split_received_df, cleaned_df)  # Execute function to get sender recipient and date dataframe
-
+working_3_df = sender_recipient_date_df.copy()  # Get working copy
 working_3_df = working_3_df.loc[working_3_df['Received'].isin(prolific_senders_df['Sent'])]  # Check the receipent column and filter off non-prolific senders 
 working_3_df = working_3_df.drop_duplicates()  # Drop duplicates to get unique contact(s) per month
 working_3_df = working_3_df['Sent'].groupby([working_3_df.index, working_3_df['Received']]).count()  # Group by Date and Received
