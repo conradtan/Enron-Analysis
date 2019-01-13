@@ -2,7 +2,7 @@
 # Script name       : summarize-enron.py
 # Author            : conradtan
 # Date created      : 20190107
-# Purpose           : To generate the following:
+# Purpose           : To generate the following within 1 python code file:
 #                     - (1) A .csv file containing the number of emails that person sent or received in the data set, sorted by the number of emails sent.
 #                     - (2) A PNG image chart visualizing the number of emails sent over time by some of the most prolific senders in (1)
 #                     - (3) A PNG image chart visualizing for the same people, the number of unique people/email addresses who contacted them over the same time period.
@@ -30,10 +30,13 @@ input_filename = sys.argv[1]
 # Set number of prolific senders to assess in 2nd and 3rd outputs
 num_prolific_senders = 10
 
-# Function to create dataframe with list of senders recipients and the email exchange datetime
-# Input parameters
-# 1. target_df: 
 
+# Function to create dataframe with list of senders, recipients and the email exchange datetime
+# Input parameters
+# 1. target_df: dataframe of recipients that has been splitted to the columns.
+# 2. with_date_df: input dataframe containing datetime
+# Output parameters
+# 1. working_df: list of senders, recipients and the email exchange datetime
 def sender_recipient_date_df(target_df, with_date_df):
     
     working_df = target_df.copy()  # Get a working copy
@@ -45,6 +48,14 @@ def sender_recipient_date_df(target_df, with_date_df):
     return working_df
 
 # Function to plot chart by time(by month)
+# Input parameters
+# 1. target_df: dataframe to plot chart on
+# 2. legend_lst: list to display on chart legend
+# 3. y_label: y axis chart label
+# 4. title: Title of chart
+# 5. output_fname: Output filename of generated chart
+# Output parameters
+# None
 def plot_output_by_time(target_df, legend_lst, y_label, title, output_fname):
     plt.figure(figsize=(20, 10), dpi=100)
     plt.xlabel('Time by Month')
