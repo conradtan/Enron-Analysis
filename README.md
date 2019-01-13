@@ -1,5 +1,5 @@
 # Enron-Analysis
-Data Summarization Code
+Data Summarization Code in Python
 
 
 ### Prerequisites
